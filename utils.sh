@@ -30,7 +30,7 @@ _int.merge() {
   local i=0 j=0 k="$l"
 
   while (( i < left_len && j < right_len )); do
-    if (( left[i] <= right[i] )); then
+    if (( left[i] <= right[j] )); then
       _int_merge_arr[$k]="${left[$i]}"
       ((i+=1))
     else
@@ -59,12 +59,13 @@ utils.timsort() {
 
   for (( i=0; i < len; i+=32 )); do
     _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+32-1))" "$((len-1))")"
-    for (( size=32; size < len; size=2*size )); do
-      for (( left=0; left < len; left+=2*size )); do
-        local mid="$((left+size-1))"
-        local right="$(utils.min2 "$((left+2*size-1))" "$((len-1))")"
-        (( mid < right )) && _int.merge _utils_timsort_arr "$left" "$mid" "$right"
-      done
+  done
+
+  for (( size=32; size < len; size=2*size )); do
+    for (( left=0; left < len; left+=2*size )); do
+      local mid="$((left+size-1))"
+      local right="$(utils.min2 "$((left+2*size-1))" "$((len-1))")"
+      (( mid < right )) && _int.merge _utils_timsort_arr "$left" "$mid" "$right"
     done
   done
 }
