@@ -5,14 +5,14 @@ INPUT="$(<data/day_1.txt)"
 
 qsort() {
   read -ra arr <<< "$@"
-  [[ "${#arr[@]}" == 0 ]] && echo "" && return
+  ((${#arr[@]} == 0)) && echo && return
   local smaller=() bigger=() pivot="${arr[0]}" res=()
 
   for i in "${arr[@]}"; do
-    if [[ "$i" -lt "$pivot" ]]; then
-       smaller+=("$i")
-    elif [[ "$i" -gt "$pivot" ]]; then
-       bigger+=("$i")
+    if ((i < pivot)); then
+      smaller+=("$i")
+    elif ((i > pivot)); then
+      bigger+=("$i")
     fi
   done
 
@@ -37,6 +37,7 @@ p1() {
    read -ra cals <<< "$(cals_per_elf "$1")"
    echo "${cals[@]: -1}"
 }
+
 p2() {
    read -ra cals <<< "$(cals_per_elf "$1")"
    local result=0
