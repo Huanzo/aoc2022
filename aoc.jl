@@ -16,7 +16,11 @@ function _cookie()
 end
 
 function _get_input(year, day)
-  res = HTTP.get("https://adventofcode.com/$year/day/$day/input", cookies = _cookie())
+  res = HTTP.get(
+          "https://adventofcode.com/$year/day/$day/input",
+          cookies = _cookie(),
+          headers = Dict("User-Agent", "git.fuckwit.dev/fuckwit/aoc2022/src/branch/master/aoc.jl by huanzodev@gmail.com")
+        )
   if res.status ≠ 200
     error("Unable to fetch infput for AOC $year day $day")
   end

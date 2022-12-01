@@ -1,26 +1,9 @@
 #!/usr/bin/env bash
 unset PATH
+BASE='.*';until [[ "$(eval "echo $BASE")" =~ \.git ]]; do BASE="../$BASE"; done;BASE="${BASE/'*'}"
+source "$BASE/utils.sh"
 
-INPUT="$(<data/day_1.txt)"
-
-qsort() {
-  read -ra arr <<< "$@"
-  ((${#arr[@]} == 0)) && echo && return
-  local smaller=() bigger=() pivot="${arr[0]}" res=()
-
-  for i in "${arr[@]}"; do
-    if ((i < pivot)); then
-      smaller+=("$i")
-    elif ((i > pivot)); then
-      bigger+=("$i")
-    fi
-  done
-
-  read -ra smaller_sorted <<< "$(qsort "${smaller[@]}")"
-  read -ra bigger_sorted <<< "$(qsort "${bigger[@]}")"
-  res=("${smaller_sorted[@]}" "$pivot" "${bigger_sorted[@]}")
-  echo "${res[@]}"
-}
+INPUT="$(<"$BASE/data/day_1.txt")"
 
 cals_per_elf() {
   mapfile -t list <<< "$1"
@@ -30,7 +13,7 @@ cals_per_elf() {
     ((tmp+=i))
   done
   cals+=("$tmp")
-  qsort "${cals[@]}"
+  utils.qsort "${cals[@]}"
 }
 
 p1() {
