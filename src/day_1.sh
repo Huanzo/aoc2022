@@ -23,9 +23,7 @@ p1() {
 
 p2() {
    read -ra cals <<< "$(cals_per_elf "$1")"
-   local result=0
-   for i in "${cals[@]: -3}"; do ((result+=i)); done
-   echo "$result"
+   utils.sum "${cals[@]: -3}"
 }
 
 p1 "$INPUT"

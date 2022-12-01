@@ -15,6 +15,15 @@ utils.qsort() {
 
   read -ra smaller_sorted <<< "$(utils.qsort "${smaller[@]}")"
   read -ra bigger_sorted <<< "$(utils.qsort "${bigger[@]}")"
+
   res=("${smaller_sorted[@]}" "$pivot" "${bigger_sorted[@]}")
+
   echo "${res[@]}"
+}
+
+utils.sum() {
+  read -ra input <<< "$@"
+  local result=0
+  for i in "${input[@]}"; do ((result+=i)); done
+  echo "$result"
 }
