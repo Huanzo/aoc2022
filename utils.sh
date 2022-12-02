@@ -52,20 +52,34 @@ _int.merge() {
     ((j+=1))
   done
 }
+_int.min_run() {
+  local len="$1" r=0
+
+  while (( len >= 32 )); do
+    r=$((r | (len & 1)))
+    len=$((len >> 1))
+  done
+  echo $((len + r))
+}
 
 utils.timsort() {
   local -n _utils_timsort_arr="$1"
   local len="${#_utils_timsort_arr[@]}"
+  local min_run="$(_int.min_run "$len")"
+  echo >&2 $len
 
-  for (( i=0; i < len; i+=32 )); do
-    _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+32-1))" "$((len-1))")"
+  for (( i=0; i < len; i+=min_run )); do
+    echo >&2 _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+min_run-1))" "$((len-1))")"
+    _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+min_run-1))" "$((len-1))")"
   done
 
-  for (( size=32; size < len; size=2*size )); do
+  for (( size=min_run; size < len; size=2*size )); do
     for (( left=0; left < len; left+=2*size )); do
-      local mid="$((left+size-1))"
-      local right="$(utils.min2 "$((left+2*size-1))" "$((len-1))")"
-      (( mid < right )) && _int.merge _utils_timsort_arr "$left" "$mid" "$right"
+      local mid=$((left+size-1))
+      local right=$(utils.min2 "$((left+2*size-1))" "$((len-1))")
+      if (( mid < right )); then 
+        _int.merge _utils_timsort_arr "$left" "$mid" "$right"
+      fi
     done
   done
 }

@@ -13,7 +13,8 @@ cals_per_elf() {
     ((tmp+=i))
   done
   cals+=("$tmp")
-  utils.qsort "${cals[@]}"
+  utils.insertion_sort cals 
+  echo "${cals[@]}"
 }
 
 p1() {
