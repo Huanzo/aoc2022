@@ -29,15 +29,8 @@ function p1(input::Vector{String})
     sum([ win_conditions[i] + score_table[i[3]] for i in input ])
 end
 
-function transform_input(x)
-    arr = collect(x)
-    arr[3] = should_play[x]
-    join(arr)
-end
-
 function p2(input::Vector{String})
-    input = map(transform_input, input)
-    sum([ win_conditions[i] + score_table[i[3]] for i in input ])
+    sum([ win_conditions[i] + score_table[i[3]] for i in map((x) -> x[1:2] * should_play[x], input) ])
 end
 
 @aoc(2022, 2)
