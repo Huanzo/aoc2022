@@ -13,7 +13,7 @@ cals_per_elf() {
     ((tmp+=i))
   done
   cals+=("$tmp")
-  utils.insertion_sort cals 
+  utils.timsort cals 
   echo "${cals[@]}"
 }
 

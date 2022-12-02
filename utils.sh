@@ -3,10 +3,11 @@
 _int.insertion_sort() {
   local -n _int_isort_arr="$1"
   local left="$2" right="$3"
+  local i=0 j=0
 
   for (( i=left+1; i<=right; i+=1 )) do
     local value="${_int_isort_arr["$i"]}" j=$((i-1))
-    while (( j>=left && "${_int_isort_arr["$j"]}" > value )); do
+    while (( j>=left && _int_isort_arr[j] > value )); do
       _int_isort_arr[$((j+1))]="${_int_isort_arr["$j"]}"
       ((j-=1))
     done
@@ -66,17 +67,16 @@ utils.timsort() {
   local -n _utils_timsort_arr="$1"
   local len="${#_utils_timsort_arr[@]}"
   local min_run="$(_int.min_run "$len")"
-  echo >&2 $len
+  local i=0 j=0 size=0 left=0 mid=0 right=0
 
   for (( i=0; i < len; i+=min_run )); do
-    echo >&2 _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+min_run-1))" "$((len-1))")"
     _int.insertion_sort _utils_timsort_arr "$i" "$(utils.min2 "$((i+min_run-1))" "$((len-1))")"
   done
 
-  for (( size=min_run; size < len; size=2*size )); do
+  for (( size=min_run; size < len; size*=2 )); do
     for (( left=0; left < len; left+=2*size )); do
-      local mid=$((left+size-1))
-      local right=$(utils.min2 "$((left+2*size-1))" "$((len-1))")
+      mid=$((left+size-1))
+      right=$(utils.min2 "$((left+2*size-1))" "$((len-1))")
       if (( mid < right )); then 
         _int.merge _utils_timsort_arr "$left" "$mid" "$right"
       fi
