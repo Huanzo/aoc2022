@@ -12,4 +12,3 @@ function p2(input::Vector{String})
 end
 
 @aoc(2022, 3)
-
